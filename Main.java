@@ -16,7 +16,7 @@ public class Main {
     // Parentheses validator
     ParenthesesValidator validator = new ParenthesesValidator();
 
-    String[] testCases = { "()a", ")((()))", "(", "(())((()())())" };
+    String[] testCases = { "()", ")((()))", "(", "(())((()())())" };
 
     Logger.setLogLevel(Logger.Level.TRACE);
     for (String testCase : testCases) {
