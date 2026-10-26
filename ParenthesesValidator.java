@@ -1,7 +1,7 @@
 public class ParenthesesValidator {
   static Logger logger = new Logger("Parentheses");
 
-  public Boolean test(String parentheses) {
+  public static Boolean test(String parentheses) {
     Integer index = 0;
 
     for (char ch : parentheses.toCharArray()) {

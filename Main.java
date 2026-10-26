@@ -14,14 +14,12 @@ public class Main {
     loggerTest.log(Logger.Level.ERROR, "something broke again");
 
     // Parentheses validator
-    ParenthesesValidator validator = new ParenthesesValidator();
-
     String[] testCases = { "()", ")((()))", "(", "(())((()())())" };
 
     Logger.setLogLevel(Logger.Level.TRACE);
     for (String testCase : testCases) {
       System.out.println(testCase);
-      validator.test(testCase);
+      ParenthesesValidator.test(testCase);
     }
   }
 }
