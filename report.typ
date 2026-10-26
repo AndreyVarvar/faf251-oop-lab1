@@ -2,8 +2,6 @@
 **Student:** Andrei Varvariuc
 
 **Programming language:** Java
-
-*Answer each section briefly. Use correct OOP terminology and refer to your own implementation. Do not write general textbook definitions without explaining how the concept appears in your program.*
 == 1. Program Structure
 `Logger.java` file contains the `Logger` class. It is responsible for handling log messages defined by the programmer. It allows the developer to print certain messages with a specified log level. Each logger has access to a static variable called `level` which controls whether the log with a certain log level should be printed or not.
 
@@ -11,6 +9,11 @@
 == 2. Classes and Objects
 A class is a special object that can store attributes and methods. An attribute is a variable tied to the class. A method is a function tied to the class.
 
+Here is an example of an object creates from a class:
+```java
+    // Main.java, line 4
+    Logger loggerTest = new Logger("test");
+```
 An example of an object created from a class, or in other words an instance of a class, can be found in `Main.java` on line 4.
 
 Since the only non-static attribute is the `name` attribute, it is the only attribute each instance stores. All other attributes are stored in one place and not in the instance itself to optimize space.
@@ -54,16 +57,19 @@ public class Logger {
 
 `ParenthesesValidator` uses `Logger` class instead of implementing logging itself because that is what classes are for - reusing similar code.
 
-- What is the responsibility of the `log` method?
-- Why does `ParenthesesValidator` use a logger instead of implementing logging itself?
-- Identify one example of a method call between objects or classes in your program.
+Here is an example of a method call:
+```java
+          // ParenthesesValidator.java, line 10
+          logger.log(Logger.Level.TRACE, "opening parenthesis found");
+```
 == 5. Testing and Correctness
-- Give one valid and one invalid input for the parentheses validator.
-- Explain how the program determines whether the input is valid.
-- Describe one test that helped you find or prevent an error.
+Valid input: `"()"`\
+Invalid input: `"))"`
+
+To determine if the parentheses are valid using an interesting trick. Start at number zero and start reading the string from left to right. When you see an opening parenthesis, add 1 to the counter, and when you see a closing parenthesis subtract 1. If that number ever goes below 0, that means there is an extra closing parenthesis, meaning it is invalid. Only when that condition is false is the string valid. An edge case is if there is a non-parenthesis symbol, in which case the program simply considers the string invalid.
+
+There is an issue though, and a simple test case to show that is `"("`. The function should return false, but it returns true. That is because we forgot to account for the fact, that when we reach the end of the string, all parentheses should have been paired up, resulting in the final number being 0, but in the case above the final number is 1. So in the end we also have to check if the number is 0, and only when it is the string is valid.
 == 6. Reflection
-- What was the most important OOP concept you applied in this laboratory?
-- If you had more time, what would you improve in your design, and why?
-**Submission requirements:** Answer all sections using your own words. Keep the report concise
-: approximately –12 pages. Include code references where useful. Be prepared to explain
-your answers during the laboratory presentation
+The most important OOP concept applied in this laboratory work are classes.
+
+I think the program is already complete as it is. If I were given more time I'd probably spend time only checking for bugs, typos, or other small errors.
