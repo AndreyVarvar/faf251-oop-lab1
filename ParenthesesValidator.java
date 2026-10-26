@@ -19,7 +19,7 @@ public class ParenthesesValidator {
           logger.log(Logger.Level.INFO, "matching pair found");
         }
         default -> {
-          this.logger.log(Logger.Level.ERROR,
+          logger.log(Logger.Level.ERROR,
               "Invalid string '" + parentheses + "': '" + ch + "' is not a parenthesis!");
           return false;
         }
