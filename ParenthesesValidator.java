@@ -1,5 +1,5 @@
 public class ParenthesesValidator {
-  Logger logger = new Logger("Parentheses");
+  static Logger logger = new Logger("Parentheses");
 
   public Boolean test(String parentheses) {
     Integer index = 0;

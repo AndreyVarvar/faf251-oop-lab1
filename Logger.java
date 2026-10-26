@@ -51,6 +51,10 @@ public class Logger {
                                                                             // (not as bad as hardcoded 4)
   }
 
+  public static void setFormat(String format) {
+    Logger.format = format;
+  }
+
   public static void setLogLevel(Level newLevel) {
     Logger.level = newLevel;
   }
