@@ -2,18 +2,20 @@ public class ParenthesesValidator {
   static Logger logger = new Logger("Parentheses");
 
   public static Boolean test(String parentheses) {
-    Integer index = 0;
+    Integer count = 0;
 
+    Integer index = 0;
     for (char ch : parentheses.toCharArray()) {
       switch (ch) {
         case '(' -> {
           logger.log(Logger.Level.TRACE, "opening parenthesis found");
-          index++;
+          count++;
         }
         case ')' -> {
-          index--;
-          if (index < 0) {
-            logger.log(Logger.Level.WARN, "invalid closing parenthesis");
+          count--;
+          if (count < 0) {
+            logger.log(Logger.Level.WARN,
+                "invalid closing parenthesis\n" + parentheses + "\n" + " ".repeat(index) + "^");
             return false;
           }
           logger.log(Logger.Level.INFO, "matching pair found");
@@ -24,9 +26,10 @@ public class ParenthesesValidator {
           return false;
         }
       }
+      index++;
     }
 
-    Boolean result = index == 0;
+    Boolean result = count == 0;
 
     logger.log(Logger.Level.INFO, "validation result: " + result.toString());
 
