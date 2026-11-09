@@ -5,7 +5,7 @@ import java.util.Map;
 import java.util.Random;
 
 public class Formatter {
-  private static String template = "[%t] [%l] %n (%r): %m";
+  private String template;
 
   private static Map<Logger.Level, List<String>> funnyMessages = Map.ofEntries(
       Map.entry(Logger.Level.TRACE,
@@ -19,6 +19,14 @@ public class Formatter {
 
   private static Random RANDOM = new Random();
 
+  Formatter() {
+    this.template = "[%t] [%l] %n: %m";
+  }
+
+  Formatter(String template) {
+    this.template = template;
+  }
+
   private static String getTimestamp() {
     Calendar cal = Calendar.getInstance();
 
@@ -30,7 +38,7 @@ public class Formatter {
   }
 
   public String format(String message, Logger.Level logLevel, String loggerName) {
-    return Formatter.template
+    return this.template
         .replace("%t", getTimestamp())
         .replace("%l", logLevel.toString())
         .replace("%n", loggerName)
