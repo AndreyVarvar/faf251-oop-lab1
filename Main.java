@@ -4,14 +4,14 @@ public class Main {
     Logger loggerTest = new Logger("test");
 
     Logger.setLogLevel(Logger.Level.TRACE);
-    loggerTest.log(Logger.Level.TRACE, "setup");
-    loggerTest.log(Logger.Level.INFO, "program start");
-    loggerTest.log(Logger.Level.ERROR, "Something broke");
-    loggerTest.log(Logger.Level.WARN, "Ignoring the broke");
+    loggerTest.trace("setup");
+    loggerTest.info("program start");
+    loggerTest.error("Something broke");
+    loggerTest.warn("Ignoring the broke");
 
     Logger.setLogLevel(Logger.Level.WARN);
-    loggerTest.log(Logger.Level.INFO, "hello");
-    loggerTest.log(Logger.Level.ERROR, "something broke again");
+    loggerTest.info("hello");
+    loggerTest.error("something broke again");
 
     // Parentheses validator
     String[] testCases = { "()", ")((()))", "(", "(())((()())())" };

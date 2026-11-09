@@ -59,7 +59,23 @@ public class Logger {
     Logger.level = newLevel;
   }
 
-  public void log(Level logLevel, String message) {
+  public void trace(String message) {
+    this.log(Logger.Level.TRACE, message);
+  }
+
+  public void info(String message) {
+    this.log(Logger.Level.INFO, message);
+  }
+
+  public void warn(String message) {
+    this.log(Logger.Level.WARN, message);
+  }
+
+  public void error(String message) {
+    this.log(Logger.Level.ERROR, message);
+  }
+
+  private void log(Level logLevel, String message) {
     if (logLevel.compareTo(Logger.level) >= 0) {
       System.out.println(getFormattedString(logLevel, message));
     }
