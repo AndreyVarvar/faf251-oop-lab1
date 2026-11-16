@@ -37,12 +37,48 @@ public class Formatter {
     return formattedTime;
   }
 
-  public String format(String message, Logger.Level logLevel, String loggerName) {
-    return this.template
+  private Integer indexOf(String message, char toFindIndexOf) {
+    char previous = ' '; // if previous == '\', then we ignore the next character
+    Integer index = -1;
+
+    for (int i = 0; i < message.length(); i++) {
+      if (previous == '\\') {
+        previous = ' ';
+        continue;
+      }
+
+      char c = message.charAt(i);
+
+      previous = c;
+
+      if (c == toFindIndexOf) {
+        index = i;
+        break;
+      }
+    }
+
+    return index;
+  }
+
+  public String format(Logger.Level logLevel, String loggerName, String message, Object... args) {
+    // first, replace reserved special characters
+    message = this.template
         .replace("%t", getTimestamp())
         .replace("%l", logLevel.toString())
         .replace("%n", loggerName)
         .replace("%m", message)
         .replace("%r", funnyMessages.get(logLevel).get(RANDOM.nextInt(3))); // forgive me for hardcoded number :P
+
+    // then, replace all other '%'
+    for (Object arg : args) {
+      Integer index = this.indexOf(message, '%');
+      if (index == -1) {
+        break;
+      }
+
+      message = message.substring(0, index) + arg.toString() + message.substring(index + 1);
+    }
+
+    return message;
   }
 }

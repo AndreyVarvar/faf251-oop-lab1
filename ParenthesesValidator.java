@@ -15,14 +15,14 @@ public class ParenthesesValidator {
           count--;
           if (count < 0) {
             logger.warn(
-                "invalid closing parenthesis\n" + parentheses + "\n" + " ".repeat(index) + "^");
+                "invalid closing parenthesis:\n%\n%%", parentheses, " ".repeat(index), "^");
             return false;
           }
           logger.info("matching pair found");
         }
         default -> {
           logger.error(
-              "Invalid string '" + parentheses + "': '" + ch + "' is not a parenthesis!");
+              "Invalid string '%': '%' is not a parenthesis!", parentheses, ch);
           return false;
         }
       }
@@ -31,7 +31,7 @@ public class ParenthesesValidator {
 
     Boolean result = count == 0;
 
-    logger.info("validation result: " + result.toString());
+    logger.info("validation result: %", result);
 
     return result;
   }
