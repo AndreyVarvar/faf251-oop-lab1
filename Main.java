@@ -85,6 +85,18 @@ public class Main {
       case "ASSIGN":
         commandAssign(tokens);
         break;
+
+      case "COMPARE":
+        commandCompare(tokens);
+        break;
+
+      case "ASSIST":
+        commandAssist(tokens);
+        break;
+
+      case "BUY":
+        commandBuy(tokens);
+        break;
     }
 
   }
@@ -97,6 +109,20 @@ public class Main {
 
     String name = tokens.get(1);
     managers.add(new DisplayManager(name, newLogger(name)));
+  }
+
+  private static void addDisplay(Display d) {
+    if (getDisplay(d.getModel()) != null) {
+      logger.warn("A logger with this name (%) already exists.");
+    }
+
+    displays.add(d);
+  }
+
+  private static void addManager(DisplayManager manager) {
+    if (getDisplayManager(manager.getName()) != null) {
+      logger.warn("A manager with this name (%) already exists.", manager.getName());
+    }
   }
 
   private static Display getDisplay(String model) {
@@ -151,7 +177,7 @@ public class Main {
       return;
     }
 
-    displays.add(new Display(model, width, height, ppi, newLogger(model)));
+    addDisplay(new Display(model, width, height, ppi, newLogger(model)));
   }
 
   private static void commandAssign(List<String> tokens) {
@@ -177,5 +203,73 @@ public class Main {
     }
 
     manager.assignDisplay(display);
+  }
+
+  private static void commandCompare(List<String> tokens) {
+    if (tokens.size() != 3) {
+      logger.error("Incorrect number of arguments passed into the COMPARE command\nUsage: COMPARE <model1> <model2>");
+      return;
+    }
+
+    String model1 = tokens.get(1);
+    String model2 = tokens.get(2);
+
+    Display display1 = getDisplay(model1);
+
+    if (display1 == null) {
+      logger.error("Unknown model: %", model1);
+      return;
+    }
+
+    Display display2 = getDisplay(model2);
+
+    if (display2 == null) {
+      logger.error("Unknown model: %", model2);
+      return;
+    }
+
+    display1.compareWithMonitor(display2);
+  }
+
+  private static void commandAssist(List<String> tokens) {
+    if (tokens.size() != 2) {
+      logger.error("Incorrent number of parameters for ASSIST command\nUsage: ASSIST <manager>");
+      return;
+    }
+
+    String name = tokens.get(1);
+    DisplayManager manager = getDisplayManager(name);
+
+    if (manager == null) {
+      logger.error("Unknown manager: %", name);
+      return;
+    }
+
+    manager.assist();
+  }
+
+  private static void commandBuy(List<String> tokens) {
+    if (tokens.size() != 3) {
+      logger.error("Incorrect number of parameters supplied to BUY command\nUsage: BUY <model> <manager>");
+      return;
+    }
+
+    String model = tokens.get(1);
+    Display display = getDisplay(model);
+
+    if (display == null) {
+      logger.error("Unknown display: %", model);
+      return;
+    }
+
+    String name = tokens.get(2);
+    DisplayManager manager = getDisplayManager(name);
+
+    if (manager == null) {
+      logger.error("Unknown manager: %", name);
+      return;
+    }
+
+    manager.buyDisplay(model);
   }
 }

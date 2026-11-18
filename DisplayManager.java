@@ -25,6 +25,11 @@ public class DisplayManager {
   }
 
   public void assist() {
+    if (this.assignedDisplays.size() == 0) {
+      logger.warn("'%' manager has no displays assigned and cannot assist!", name);
+      return;
+    }
+
     for (int i = 1; i < this.assignedDisplays.size(); i++) {
       this.assignedDisplays.get(i - 1).compareWithMonitor(this.assignedDisplays.get(i));
     }
