@@ -1,25 +1,22 @@
-import java.io.File;
-import java.io.FileNotFoundException;
+import java.io.IOException;
+import java.nio.file.Files;
+import java.nio.file.Path;
+import java.util.ArrayList;
 import java.util.List;
-import java.util.Scanner;
+import java.util.stream.Stream;
 
 public class CommandReader {
-  public static List<String> read(String filename) {
-    Scanner file;
-    List<String> lines = List.of();
-    try {
-      file = new Scanner(new File(filename));
-    } catch (FileNotFoundException e) {
-      return lines;
+  public static List<String> read(String filename, Logger logger) {
+    Path path = Path.of(filename);
+
+    ArrayList<String> result = new ArrayList<String>();
+
+    try (Stream<String> lines = Files.lines(path)) {
+      lines.forEach(result::add);
+    } catch (IOException e) {
+      logger.error("This file does not exist: %", filename);
     }
 
-    while (file.hasNext()) {
-      String line = file.next();
-      lines.add(line);
-    }
-
-    file.close();
-
-    return lines;
+    return result;
   }
 }

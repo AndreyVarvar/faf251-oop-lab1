@@ -10,8 +10,10 @@ public class Main {
   private static Logger logger = new Logger("main", formatter, sink);
 
   public static void main(String[] args) throws Exception {
+    Logger.setLogLevel(Logger.Level.TRACE);
+
     // lab1();
-    lab2_1();
+    // lab2_1();
     lab2_2(args);
   }
 
@@ -63,52 +65,92 @@ public class Main {
   }
 
   private static void lab2_2(String[] args) throws Exception {
+    String filename = args[0];
+    List<String> commands = CommandReader.read(filename, logger);
 
+    for (String command : commands) {
+      parseCommand(command);
+    }
   }
 
   private static void parseCommand(String line) {
     // step 1: get rid of comments
-    String command = line.split("#")[0];
+    String[] command = line.split("#");
+    if (command.length < 1) {
+      return; // empty line
+    }
 
-    // step 2: tokenize
-    List<String> tokens = List.of(command.split(" "));
+    // step 2: clearn the line
+    String cleaned = command[0]; // very primitive cleaning, other extra spaces are not cleaned
 
-    switch (tokens.get(0)) {
+    if (cleaned == "") {
+      return; // also an empty line
+    }
+
+    // step 3: tokenize
+    Tokens tokens = new Tokens(List.of(cleaned.split(" ")));
+
+    // step 4: execute the command
+    if (tokens.size() == 0) {
+      // empty line
+      return;
+    }
+
+    String c = tokens.get(0).strip();
+
+    if (c.length() == 0) {
+      // empty line
+      return;
+    }
+
+    switch (c) {
       case "MANAGER":
+        logger.trace("MANAGER command invoked");
         commandManager(tokens);
         break;
 
       case "DISPLAY":
+        logger.trace("DISPLAY command invoked");
         commandDisplay(tokens);
         break;
 
       case "ASSIGN":
+        logger.trace("ASSIGN command invoked");
         commandAssign(tokens);
         break;
 
       case "COMPARE":
+        logger.trace("COMPARE command invoked");
         commandCompare(tokens);
         break;
 
       case "ASSIST":
+        logger.trace("ASSIST command invoked");
         commandAssist(tokens);
         break;
 
       case "BUY":
+        logger.trace("BUY command invoked");
         commandBuy(tokens);
+        break;
+
+      default:
+        logger.error("Unknown command: '%'", c);
         break;
     }
 
   }
 
-  private static void commandManager(List<String> tokens) {
+  private static void commandManager(Tokens tokens) {
     if (tokens.size() != 2) {
       logger.error("Incorrect number of arguments passed into the MANAGER command\nUsage: MANAGER <name>");
       return;
     }
 
     String name = tokens.get(1);
-    managers.add(new DisplayManager(name, newLogger(name)));
+
+    logger.info("A manager was added: '%'", name);
+    addManager(new DisplayManager(name, newLogger(name)));
   }
 
   private static void addDisplay(Display d) {
@@ -123,11 +165,13 @@ public class Main {
     if (getDisplayManager(manager.getName()) != null) {
       logger.warn("A manager with this name (%) already exists.", manager.getName());
     }
+
+    managers.add(manager);
   }
 
   private static Display getDisplay(String model) {
     for (Display d : displays) {
-      if (d.getModel() == model) {
+      if (d.getModel().equals(model)) {
         return d;
       }
     }
@@ -137,7 +181,7 @@ public class Main {
 
   private static DisplayManager getDisplayManager(String name) {
     for (DisplayManager m : managers) {
-      if (m.getName() == name) {
+      if (m.getName().equals(name)) {
         return m;
       }
     }
@@ -145,7 +189,7 @@ public class Main {
     return null;
   }
 
-  private static void commandDisplay(List<String> tokens) {
+  private static void commandDisplay(Tokens tokens) {
     if (tokens.size() != 5) {
       logger.error(
           "Incorrect number of arguments passed into the DISPLAY command\nUsage: DISPLAY <model> <w> <h> <ppi>");
@@ -177,10 +221,12 @@ public class Main {
       return;
     }
 
+    logger.info("A display was created: '%'", model);
+
     addDisplay(new Display(model, width, height, ppi, newLogger(model)));
   }
 
-  private static void commandAssign(List<String> tokens) {
+  private static void commandAssign(Tokens tokens) {
     if (tokens.size() != 3) {
       logger.error("Incorrect number of arguments passed into the ASSIGN command\nUsage: ASSIGN <model> <manager>");
       return;
@@ -202,10 +248,12 @@ public class Main {
       return;
     }
 
+    logger.info("'%' was assigned to '%'", model, managerName);
+
     manager.assignDisplay(display);
   }
 
-  private static void commandCompare(List<String> tokens) {
+  private static void commandCompare(Tokens tokens) {
     if (tokens.size() != 3) {
       logger.error("Incorrect number of arguments passed into the COMPARE command\nUsage: COMPARE <model1> <model2>");
       return;
@@ -217,21 +265,23 @@ public class Main {
     Display display1 = getDisplay(model1);
 
     if (display1 == null) {
-      logger.error("Unknown model: %", model1);
+      logger.error("Unknown model: '%'", model1);
       return;
     }
 
     Display display2 = getDisplay(model2);
 
     if (display2 == null) {
-      logger.error("Unknown model: %", model2);
+      logger.error("Unknown model: '%'", model2);
       return;
     }
+
+    logger.info("'%' is being compared to '%'", model1, model2);
 
     display1.compareWithMonitor(display2);
   }
 
-  private static void commandAssist(List<String> tokens) {
+  private static void commandAssist(Tokens tokens) {
     if (tokens.size() != 2) {
       logger.error("Incorrent number of parameters for ASSIST command\nUsage: ASSIST <manager>");
       return;
@@ -241,14 +291,15 @@ public class Main {
     DisplayManager manager = getDisplayManager(name);
 
     if (manager == null) {
-      logger.error("Unknown manager: %", name);
+      logger.error("Unknown manager: '%'", name);
       return;
     }
 
+    logger.info("'%' is assisting a customer", name);
     manager.assist();
   }
 
-  private static void commandBuy(List<String> tokens) {
+  private static void commandBuy(Tokens tokens) {
     if (tokens.size() != 3) {
       logger.error("Incorrect number of parameters supplied to BUY command\nUsage: BUY <model> <manager>");
       return;
@@ -258,7 +309,7 @@ public class Main {
     Display display = getDisplay(model);
 
     if (display == null) {
-      logger.error("Unknown display: %", model);
+      logger.error("Unknown display: '%'", model);
       return;
     }
 
@@ -266,10 +317,11 @@ public class Main {
     DisplayManager manager = getDisplayManager(name);
 
     if (manager == null) {
-      logger.error("Unknown manager: %", name);
+      logger.error("Unknown manager: '%'", name);
       return;
     }
 
+    logger.info("'%' sold '%'", name, model);
     manager.buyDisplay(model);
   }
 }

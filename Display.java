@@ -16,7 +16,7 @@ public class Display {
     this.ppi = ppi;
     this.logger = logger;
 
-    this.logger.trace("A display was created: %", this.model);
+    this.logger.trace("A display was created: '%'", this.model);
   }
 
   public String getModel() {

@@ -12,7 +12,7 @@ public class DisplayManager {
     };
     this.logger = logger;
 
-    this.logger.trace("Created manager: %", name);
+    this.logger.trace("Created manager: '%'", name);
   }
 
   public DisplayManager(String name) {
@@ -21,7 +21,7 @@ public class DisplayManager {
 
   public void assignDisplay(Display d) {
     this.assignedDisplays.add(d);
-    this.logger.trace("A display was assigned to '%': %", this.name, d.getModel());
+    this.logger.trace("A display was assigned to '%': '%'", this.name, d.getModel());
   }
 
   public void assist() {
@@ -30,6 +30,7 @@ public class DisplayManager {
       return;
     }
 
+    System.out.println("Hello, I'm " + this.name + " and here are the displays: ");
     for (int i = 1; i < this.assignedDisplays.size(); i++) {
       this.assignedDisplays.get(i - 1).compareWithMonitor(this.assignedDisplays.get(i));
     }
@@ -41,19 +42,19 @@ public class DisplayManager {
 
   public Display buyDisplay(Display d) {
     if (!this.assignedDisplays.contains(d)) {
-      this.logger.warn("A display was removed that was not in the assigned display list: %", d.getModel());
+      this.logger.warn("A display was removed that was not in the assigned display list: '%'", d.getModel());
     }
 
     this.assignedDisplays.remove(d);
-    this.logger.info("A display was bought: %", d.getModel());
+    this.logger.info("A display was bought: '%'", d.getModel());
     return d;
   }
 
   public Display buyDisplay(String model) {
     for (Display display : this.assignedDisplays) {
-      if (display.getModel() == model) {
+      if (display.getModel().equals(model)) {
         this.assignedDisplays.remove(display);
-        this.logger.info("A display was bought: %", model);
+        this.logger.info("A display was bought: '%'", model);
         return display;
       }
     }

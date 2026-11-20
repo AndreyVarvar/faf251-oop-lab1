@@ -11,6 +11,12 @@ public class Logger {
     ERROR
   }
 
+  public static final String RESET = "\u001B[0m";
+  public static final String RED = "\u001B[31m";
+  public static final String GREEN = "\u001B[32m";
+  public static final String YELLOW = "\u001B[33m";
+  public static final String BLUE = "\u001B[34m";
+
   Logger(String name) {
     this.name = name;
     this.formatter = new Formatter();
@@ -28,19 +34,19 @@ public class Logger {
   }
 
   public void trace(String message, Object... args) {
-    this.log(Logger.Level.TRACE, message, args);
+    this.log(Logger.Level.TRACE, GREEN + message + RESET, args);
   }
 
   public void info(String message, Object... args) {
-    this.log(Logger.Level.INFO, message, args);
+    this.log(Logger.Level.INFO, BLUE + message + RESET, args);
   }
 
   public void warn(String message, Object... args) {
-    this.log(Logger.Level.WARN, message, args);
+    this.log(Logger.Level.WARN, YELLOW + message + RESET, args);
   }
 
   public void error(String message, Object... args) {
-    this.log(Logger.Level.ERROR, message, args);
+    this.log(Logger.Level.ERROR, RED + message + RESET, args);
   }
 
   private void log(Level logLevel, String message, Object... args) {
