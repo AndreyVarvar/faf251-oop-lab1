@@ -141,6 +141,41 @@ public class Main {
 
   }
 
+  private static String showErrorLocation(Tokens tokens, int errorTokenIndex, String errorMessage) {
+    // returns three lines. Example:
+    // Error when executing command:
+    // COMMAND arg1 arg2
+    // ....... ^^^^ <- <error message>
+
+    String result = "Error when executing command: \n";
+
+    result += tokens.join(" ") + "\n";
+
+    boolean foundIndex = false;
+
+    for (int i = 0; i < tokens.size(); i++) {
+      String s = " ";
+      if (i == errorTokenIndex) {
+        foundIndex = true;
+        s = "^";
+      }
+
+      result += s.repeat(tokens.get(i).length()) + " ";
+
+      if (foundIndex) {
+        break;
+      }
+    }
+
+    if (!foundIndex) {
+      return ""; // what?
+    }
+
+    result += "<- " + errorMessage + "\n";
+
+    return result;
+  }
+
   private static void commandManager(Tokens tokens) {
     if (tokens.size() != 2) {
       logger.error("Incorrect number of arguments passed into the MANAGER command\nUsage: MANAGER <name>");
@@ -203,21 +238,21 @@ public class Main {
     try {
       width = Integer.parseInt(tokens.get(2));
     } catch (NumberFormatException e) {
-      logger.error("'width' parameter of DISPLAY has wrong numeric format.");
+      logger.error(showErrorLocation(tokens, 2, "'width' parameter of DISPLAY has wrong numeric format."));
       return;
     }
 
     try {
       height = Integer.parseInt(tokens.get(3));
     } catch (NumberFormatException e) {
-      logger.error("'height' parameter of DISPLAY has wrong numeric format.");
+      logger.error(showErrorLocation(tokens, 3, "'height' parameter of DISPLAY has wrong numeric format."));
       return;
     }
 
     try {
       ppi = Double.parseDouble(tokens.get(4));
     } catch (NumberFormatException e) {
-      logger.error("'ppi' parameter of DISPLAY has wrong double format.");
+      logger.error(showErrorLocation(tokens, 4, "'ppi' parameter of DISPLAY has wrong double format."));
       return;
     }
 
@@ -233,18 +268,16 @@ public class Main {
     }
 
     String model = tokens.get(1);
-    String managerName = tokens.get(2);
-
     Display display = getDisplay(model);
-
     if (display == null) {
-      logger.error("Display '%' does not exist.", model);
+      logger.error(showErrorLocation(tokens, 1, "Display '%' does not exist."), model);
       return;
     }
 
+    String managerName = tokens.get(2);
     DisplayManager manager = getDisplayManager(managerName);
     if (manager == null) {
-      logger.error("Display manager '%' does not exist.", managerName);
+      logger.error(showErrorLocation(tokens, 2, "Display manager '%' does not exist."), managerName);
       return;
     }
 
@@ -265,14 +298,14 @@ public class Main {
     Display display1 = getDisplay(model1);
 
     if (display1 == null) {
-      logger.error("Unknown model: '%'", model1);
+      logger.error(showErrorLocation(tokens, 1, "Unknown model: '%'"), model1);
       return;
     }
 
     Display display2 = getDisplay(model2);
 
     if (display2 == null) {
-      logger.error("Unknown model: '%'", model2);
+      logger.error(showErrorLocation(tokens, 2, "Unknown model: '%'"), model2);
       return;
     }
 
@@ -291,7 +324,7 @@ public class Main {
     DisplayManager manager = getDisplayManager(name);
 
     if (manager == null) {
-      logger.error("Unknown manager: '%'", name);
+      logger.error(showErrorLocation(tokens, 1, "Unknown manager: '%'"), name);
       return;
     }
 
@@ -309,7 +342,7 @@ public class Main {
     Display display = getDisplay(model);
 
     if (display == null) {
-      logger.error("Unknown display: '%'", model);
+      logger.error(showErrorLocation(tokens, 1, "Unknown display: '%'"), model);
       return;
     }
 
@@ -317,7 +350,7 @@ public class Main {
     DisplayManager manager = getDisplayManager(name);
 
     if (manager == null) {
-      logger.error("Unknown manager: '%'", name);
+      logger.error(showErrorLocation(tokens, 2, "Unknown manager: '%'"), name);
       return;
     }
 
