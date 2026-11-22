@@ -10,6 +10,7 @@ public class CommandReader {
     Path path = Path.of(filename);
 
     ArrayList<String> result = new ArrayList<String>();
+    logger.info("Opening command file: '%'", filename);
 
     try (Stream<String> lines = Files.lines(path)) {
       lines.forEach(result::add);
