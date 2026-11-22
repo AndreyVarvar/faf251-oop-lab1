@@ -1,0 +1,20 @@
+# Wednesday at the shop. Someone is selling a thermonuclear bomb instead of a display.
+MANAGER Obama
+MANAGER Trump
+
+DISPLAY ASUS-123456789 2000 3000 100.0
+DISPLAY FatMan 2 2 1000.0
+DISPLAY IDK 100 100 100.0
+
+ASSIGN ASUS-123456789 Obama
+ASSIGN FatMan Trump
+ASSIGN IDK Trump
+
+COMPARE ASUS-123456789 FatMan
+COMPARE IDK FatMan
+
+ASSIST Obama
+ASSIST Trump
+BUY FatMan Trump
+BUY FatMan Trump
+ASSIST Trump

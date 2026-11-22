@@ -8,21 +8,21 @@ public class ParenthesesValidator {
     for (char ch : parentheses.toCharArray()) {
       switch (ch) {
         case '(' -> {
-          logger.log(Logger.Level.TRACE, "opening parenthesis found");
+          logger.trace("opening parenthesis found");
           count++;
         }
         case ')' -> {
           count--;
           if (count < 0) {
-            logger.log(Logger.Level.WARN,
-                "invalid closing parenthesis\n" + parentheses + "\n" + " ".repeat(index) + "^");
+            logger.warn(
+                "invalid closing parenthesis:\n%\n%%", parentheses, " ".repeat(index), "^");
             return false;
           }
-          logger.log(Logger.Level.INFO, "matching pair found");
+          logger.info("matching pair found");
         }
         default -> {
-          logger.log(Logger.Level.ERROR,
-              "Invalid string '" + parentheses + "': '" + ch + "' is not a parenthesis!");
+          logger.error(
+              "Invalid string '%': '%' is not a parenthesis!", parentheses, ch);
           return false;
         }
       }
@@ -31,7 +31,7 @@ public class ParenthesesValidator {
 
     Boolean result = count == 0;
 
-    logger.log(Logger.Level.INFO, "validation result: " + result.toString());
+    logger.info("validation result: %", result);
 
     return result;
   }
