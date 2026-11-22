@@ -19,6 +19,25 @@ public class Formatter {
 
   private static Random RANDOM = new Random();
 
+  public static enum Color {
+    RESET("\u001B[0m"),
+    RED("\u001B[31m"),
+    GREEN("\u001B[32m"),
+    YELLOW("\u001B[33m"),
+    ORANGE("\033[38;5;208m"),
+    BLUE("\u001B[34m");
+
+    private final String colorCode;
+
+    Color(String colorCode) {
+      this.colorCode = colorCode;
+    }
+
+    public String getColorCode() {
+      return this.colorCode;
+    }
+  }
+
   Formatter() {
     this.template = "[%t] [%l] %n: %m";
   }
@@ -60,7 +79,7 @@ public class Formatter {
     return index;
   }
 
-  public String format(Logger.Level logLevel, String loggerName, String message, Object... args) {
+  public String format(Logger.Level logLevel, String loggerName, String message, Color color, Object... args) {
     // first, replace reserved special characters
     message = this.template
         .replace("%t", getTimestamp())
@@ -78,6 +97,8 @@ public class Formatter {
 
       message = message.substring(0, index) + arg.toString() + message.substring(index + 1);
     }
+
+    message = color.getColorCode() + message + Color.RESET.getColorCode();
 
     return message;
   }
